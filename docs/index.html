@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<title>RugRadar</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1280px; height: 720px; background: #0f1117; color: #e6e9ef; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+  header { padding: 18px 28px; border-bottom: 1px solid #22262f; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 22px; font-weight: 800; color: #4ee1a0; }
+  .tagline { font-size: 13px; color: #8a90a0; margin-top: 2px; }
+  main { display: flex; padding: 20px 28px; gap: 20px; height: 600px; }
+  .panel { background: #171a22; border: 1px solid #262b36; border-radius: 10px; padding: 16px; }
+  .list-panel { width: 560px; }
+  .list-panel h3 { font-size: 14px; color: #9aa1b2; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .row { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px; border-radius: 8px; margin-bottom: 8px; background: #1d212b; cursor: pointer; border: 1px solid transparent; }
+  .row:hover { border-color: #3a4152; }
+  .row.active { border-color: #4ee1a0; background: #1c2a24; }
+  .tname { font-weight: 700; font-size: 15px; }
+  .tsub { font-size: 11px; color: #777f91; }
+  .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+  .danger { background: #3a1620; color: #ff6b6b; }
+  .warn { background: #3a3116; color: #ffd166; }
+  .safe { background: #163a24; color: #4ee1a0; }
+  .detail-panel { flex: 1; }
+  .placeholder { color: #6b7284; font-size: 14px; margin-top: 60px; text-align: center; }
+  .dname { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .dsub { font-size: 12px; color: #8a90a0; margin-bottom: 18px; }
+  .scores { display: flex; gap: 16px; margin-bottom: 20px; }
+  .scorebox { flex: 1; background: #1d212b; border-radius: 10px; padding: 14px; text-align: center; }
+  .scorebox .num { font-size: 32px; font-weight: 800; }
+  .scorebox .lbl { font-size: 11px; color: #8a90a0; margin-top: 4px; text-transform: uppercase; }
+  .metric { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #242938; font-size: 13px; }
+  .metric span:first-child { color: #9aa1b2; }
+  .metric span:last-child { font-weight: 700; }
+  .alertbtn { margin-top: 20px; width: 100%; padding: 12px; background: #4ee1a0; color: #0f1117; font-weight: 800; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+  .alertbtn:hover { background: #3fc98c; }
+  .toast { margin-top: 12px; background: #16233a; border: 1px solid #2d4a7a; color: #8bb7ff; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+  .toast.show { display: block; }
+  footer { position: absolute; bottom: 8px; left: 28px; font-size: 11px; color: #5a6072; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">🛰 RugRadar</div>
+    <div class="tagline">AI-powered rug pull detection and pump potential scoring for Solana tokens</div>
+  </div>
+</header>
+
+<main>
+  <div class="panel list-panel">
+    <h3>Live Token Scan</h3>
+
+    <div class="row" data-demo="token-row-1" onclick="selectToken('dogex')">
+      <div>
+        <div class="tname">$DOGEX</div>
+        <div class="tsub">Launched 2h ago · Raydium</div>
+      </div>
+      <div class="badge danger">Risk 92</div>
+    </div>
+
+    <div class="row" data-demo="token-row-2" onclick="selectToken('solpup')">
+      <div>
+        <div class="tname">$SOLPUP</div>
+        <div class="tsub">Launched 9h ago · Raydium</div>
+      </div>
+      <div class="badge warn">Risk 54</div>
+    </div>
+
+    <div class="row" data-demo="token-row-3" onclick="selectToken('mooncat')">
+      <div>
+        <div class="tname">$MOONCAT</div>
+        <div class="tsub">Launched 1d ago · Orca</div>
+      </div>
+      <div class="badge safe">Risk 12</div>
+    </div>
+
+  </div>
+
+  <div class="panel detail-panel" data-demo="detail-panel">
+    <div id="placeholder" class="placeholder">Select a token on the left to view its AI risk &amp; pump analysis</div>
+
+    <div id="detail-body" style="display:none;">
+      <div class="dname" data-demo="detail-name">$DOGEX</div>
+      <div class="dsub" data-demo="detail-sub">Solana · SPL Token</div>
+
+      <div class="scores">
+        <div class="scorebox">
+          <div class="num" data-demo="detail-risk" style="color:#ff6b6b;">92</div>
+          <div class="lbl">Rug Risk Score</div>
+        </div>
+        <div class="scorebox">
+          <div class="num" data-demo="detail-pump" style="color:#4ee1a0;">18</div>
+          <div class="lbl">Pump Potential</div>
+        </div>
+      </div>
+
+      <div class="metric"><span>Liquidity Lock</span><span data-demo="detail-liquidity">Unlocked</span></div>
+      <div class="metric"><span>Top 10 Holders</span><span data-demo="detail-holders">78%</span></div>
+      <div class="metric"><span>Mint Authority</span><span data-demo="detail-authority">Active (Danger)</span></div>
+
+      <button class="alertbtn" data-demo="alert-btn" onclick="sendAlert()">Send Alert to Discord</button>
+      <div class="toast" id="toast" data-demo="alert-toast">✅ Alert sent to #rug-alerts for <span id="toast-name">$DOGEX</span></div>
+    </div>
+  </div>
+</main>
+
+<footer>Prototype — all data is simulated</footer>
+
+<script>
+const data = {
+  dogex: { name: "$DOGEX", sub: "Solana · SPL Token · 2h old", risk: 92, riskColor: "#ff6b6b", pump: 18, pumpColor: "#4ee1a0", liquidity: "Unlocked", holders: "78%", authority: "Active (Danger)" },
+  solpup: { name: "$SOLPUP", sub: "Solana · SPL Token · 9h old", risk: 54, riskColor: "#ffd166", pump: 61, pumpColor: "#4ee1a0", liquidity: "Locked 30d", holders: "45%", authority: "Revoked" },
+  mooncat: { name: "$MOONCAT", sub: "Solana · SPL Token · 1d old", risk: 12, riskColor: "#4ee1a0", pump: 88, pumpColor: "#4ee1a0", liquidity: "Locked 180d", holders: "22%", authority: "Revoked" }
+};
+const rowIds = { dogex: "token-row-1", solpup: "token-row-2", mooncat: "token-row-3" };
+
+function selectToken(id) {
+  const d = data[id];
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('detail-body').style.display = 'block';
+  document.querySelector('[data-demo="detail-name"]').textContent = d.name;
+  document.querySelector('[data-demo="detail-sub"]').textContent = d.sub;
+  const riskEl = document.querySelector('[data-demo="detail-risk"]');
+  riskEl.textContent = d.risk;
+  riskEl.style.color = d.riskColor;
+  document.querySelector('[data-demo="detail-pump"]').textContent = d.pump;
+  document.querySelector('[data-demo="detail-liquidity"]').textContent = d.liquidity;
+  document.querySelector('[data-demo="detail-holders"]').textContent = d.holders;
+  document.querySelector('[data-demo="detail-authority"]').textContent = d.authority;
+  document.getElementById('toast-name').textContent = d.name;
+  document.getElementById('toast').classList.remove('show');
+
+  document.querySelectorAll('.row').forEach(r => r.classList.remove('active'));
+  document.querySelector('[data-demo="' + rowIds[id] + '"]').classList.add('active');
+}
+
+function sendAlert() {
+  document.getElementById('toast').classList.add('show');
+}
+</script>
+
+</body>
+</html>

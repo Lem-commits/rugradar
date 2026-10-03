@@ -80,3 +80,10 @@ Built for the Colosseum hackathon.
 ---
 
 🎬 Pitch video: [docs/pitch-video.mp4](docs/pitch-video.mp4)
+
+
+## Prototype
+
+Live prototype: https://lem-commits.github.io/rugradar/
+
+The source is [docs/index.html](docs/index.html) (served with GitHub Pages from the /docs folder). All data is simulated.
